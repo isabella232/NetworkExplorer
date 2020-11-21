@@ -6,6 +6,7 @@
 #include "resource.h"
 #include "aboutdlg.h"
 #include "ConnectionsView.h"
+#include "SecurityHelper.h"
 #include "MainFrm.h"
 
 const int WINDOW_MENU_POSITION = 5;
@@ -25,16 +26,14 @@ BOOL CMainFrame::OnIdle() {
 LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	HWND hWndCmdBar = m_CmdBar.Create(m_hWnd, rcDefault, nullptr, ATL_SIMPLE_CMDBAR_PANE_STYLE);
 	CMenuHandle menu = GetMenu();
-	//if (!SecurityHelper::IsRunningElevated()) {
-	//	auto fileMenu = menu.GetSubMenu(0);
-	//	fileMenu.InsertMenu(0, MF_BYPOSITION, ID_FILE_RUNASADMIN, L"Run As &Administrator");
-	//	fileMenu.InsertMenu(1, MF_SEPARATOR | MF_BYPOSITION, (UINT_PTR)0, (HBITMAP)nullptr);
-	//}
-	//else {
-	//	CString text;
-	//	GetWindowText(text);
-	//	SetWindowText(text + L" (Administrator)");
-	//}
+	if (SecurityHelper::IsRunningElevated()) {
+		auto fileMenu = menu.GetSubMenu(0);
+		fileMenu.DeleteMenu(0, MF_BYPOSITION);
+		fileMenu.DeleteMenu(0, MF_BYPOSITION);
+		CString text;
+		GetWindowText(text);
+		SetWindowText(text + L" (Administrator)");
+	}
 	m_CmdBar.SetAlphaImages(true);
 	m_CmdBar.AttachMenu(menu);
 	InitCommandBar();
@@ -198,6 +197,7 @@ void CMainFrame::InitCommandBar() {
 		{ ID_VIEW_REFRESHNOW, IDI_REFRESH },
 		{ ID_VIEW_PAUSE, IDI_PAUSE },
 		{ ID_NETWORK_ACTIVECONNECTIONS, IDI_CONNECTION },
+		{ ID_FILE_RUNASADMINISTRATOR, 0, SecurityHelper::GetShieldIcon() },
 	};
 	for (auto& cmd : cmds) {
 		m_CmdBar.AddIcon(cmd.icon ? AtlLoadIconImage(cmd.icon, 0, 16, 16) : cmd.hIcon, cmd.id);
@@ -238,6 +238,13 @@ LRESULT CMainFrame::OnForwardCommand(WORD, WORD, HWND, BOOL&) {
 	auto page = m_view.GetActivePage();
 	if (page >= 0) {
 		return ::SendMessage(m_view.GetPageHWND(page), WM_FORWARDMSG, 1, reinterpret_cast<LPARAM>(m_pCurrentMsg));
+	}
+	return 0;
+}
+
+LRESULT CMainFrame::OnRunAsAdmin(WORD, WORD, HWND, BOOL&) {
+	if (SecurityHelper::RunElevated()) {
+		SendMessage(WM_CLOSE);
 	}
 	return 0;
 }

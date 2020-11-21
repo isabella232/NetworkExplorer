@@ -176,6 +176,9 @@
       <TypeLibraryName>$(IntDir)/NetExp.tlb</TypeLibraryName>
       <DllDataFileName />
     </Midl>
+    <PostBuildEvent>
+      <Command>signtool sign /i DigiCert /fd sha256 $(TargetPath)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -206,6 +209,9 @@
       <TypeLibraryName>$(IntDir)/NetExp.tlb</TypeLibraryName>
       <DllDataFileName />
     </Midl>
+    <PostBuildEvent>
+      <Command>signtool sign /i DigiCert /fd sha256 $(TargetPath)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp" />
@@ -223,6 +229,7 @@
     </ClCompile>
     <ClCompile Include="ConnectionsView.cpp" />
     <ClCompile Include="ProcessManager.cpp" />
+    <ClCompile Include="SecurityHelper.cpp" />
     <ClCompile Include="SortHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -237,6 +244,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ConnectionsView.h" />
+    <ClInclude Include="SecurityHelper.h" />
     <ClInclude Include="SortHelper.h" />
     <ClInclude Include="ViewBase.h" />
     <ClInclude Include="VirtualListView.h" />

@@ -82,30 +82,10 @@ bool SecurityHelper::IsTokenAdminGroup() {
 	return isAdmin;
 }
 
-void SecurityHelper::ErrorDialog(HWND hParent, PCWSTR message, DWORD error) {
-	LPWSTR  lpMsgBuf;
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-		nullptr, error,	MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(LPWSTR)&lpMsgBuf, 0, nullptr);
+HICON SecurityHelper::GetShieldIcon() {
+	SHSTOCKICONINFO ssii = { sizeof(ssii) };
+	if (FAILED(::SHGetStockIconInfo(SIID_SHIELD, SHGSI_SMALLICON | SHGSI_ICON, &ssii)))
+		return nullptr;
 
-	CString text;
-	text.Format(L"%s: %s", message, lpMsgBuf);
-	if ((error == ERROR_ACCESS_DENIED || error == ERROR_ELEVATION_REQUIRED) &&
-		// Unmanifested applications on Windows 8 and higher will return the
-		// Windows 8 version (6.2). Since this test is for >=6, this is acceptable.
-		::IsWindowsVistaOrGreater() && !IsTokenAdminGroup()) {
-
-		AtlMessageBox(hParent, (PCWSTR)text, IDS_ERRORTITLE, MB_OK | MB_ICONERROR);
-
-		//DialogBoxParam(GetModuleHandle(NULL), "AccessDenied", hParent, (DLGPROC)About,
-		//	(LPARAM)_strdup(errmsg));
-
-	}
-	else if (error == ERROR_INVALID_HANDLE) {
-		AtlMessageBox(hParent, L"This object type cannot be opened", IDS_ERRORTITLE, MB_OK | MB_ICONERROR);
-	}
-	else {
-		AtlMessageBox(hParent, (PCWSTR)text, IDS_ERRORTITLE, MB_OK | MB_ICONERROR);
-	}
-	::LocalFree(lpMsgBuf);
+	return ssii.hIcon;
 }

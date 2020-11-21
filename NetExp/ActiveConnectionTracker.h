@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iphlpapi.h>
-#include <functional>
+#include <string>
 
 enum class ConnectionType : DWORD {
 	Invalid = 0,
@@ -27,6 +27,8 @@ struct Connection {
 	DWORD LocalPort;
 	DWORD RemotePort{ 0 };
 	LONGLONG TimeStamp{ 0 };
+	std::wstring ModuleName;
+	std::wstring ModulePath;
 
 	bool operator==(const Connection& other) const;
 };
@@ -34,7 +36,7 @@ struct Connection {
 template<>
 struct std::hash<Connection> {
 	const size_t operator()(const Connection& conn) const {
-		return conn.Pid ^ conn.LocalAddress ^ (conn.LocalPort << 6) ^ ((int)conn.Type << 20) ^ conn.RemoteAddress;
+		return conn.Pid ^ conn.LocalAddress ^ (conn.LocalPort << 6) ^ ((int)conn.Type << 20);
 	}
 };
 
@@ -54,6 +56,11 @@ public:
 	const ConnectionVec& GetClosedConnections() const;
 
 private:
+	void InitTcp4Connection(Connection* conn, const MIB_TCPROW_OWNER_MODULE& item) const;
+	void InitTcp6Connection(Connection* conn, const MIB_TCP6ROW_OWNER_MODULE& item) const;
+	void InitUdp4Connection(Connection* conn, const MIB_UDPROW_OWNER_MODULE& item) const;
+	void InitUdp6Connection(Connection* conn, const MIB_UDP6ROW_OWNER_MODULE& item) const;
+
 	void AddTcp4Connections(PMIB_TCPTABLE_OWNER_MODULE table, ConnectionMap& map, ConnectionVec& local, bool first);
 	void AddTcp6Connections(PMIB_TCP6TABLE_OWNER_MODULE table, ConnectionMap& map, ConnectionVec& local, bool first);
 	void AddUdp4Connections(PMIB_UDPTABLE_OWNER_MODULE table, ConnectionMap& map, ConnectionVec& local, bool first);
@@ -64,5 +71,6 @@ private:
 	ConnectionVec _newConnections;
 	ConnectionVec _closedConnections;
 	ConnectionMap _connectionMap;
+	inline static thread_local BYTE _buffer[1 << 10];
 };
 

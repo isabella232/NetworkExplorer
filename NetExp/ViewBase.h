@@ -126,11 +126,6 @@ protected:
 		return m_pFrame;
 	}
 
-	LRESULT OnNewFrame(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
-		m_pFrame = reinterpret_cast<IMainFrame*>(lParam);
-		return 0;
-	}
-
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled) {
 		auto pT = static_cast<T*>(this);
 

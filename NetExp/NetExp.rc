@@ -53,6 +53,8 @@ IDR_MAINFRAME MENU
 BEGIN
     POPUP "&File"
     BEGIN
+        MENUITEM "&Run As Administrator",       ID_FILE_RUNASADMINISTRATOR
+        MENUITEM SEPARATOR
         MENUITEM "&Save...\tCtrl+S",            ID_FILE_SAVE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_APP_EXIT

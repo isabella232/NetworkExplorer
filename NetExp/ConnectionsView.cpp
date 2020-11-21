@@ -17,7 +17,8 @@ CString CConnectionsView::GetColumnText(HWND, int row, int col) const {
 	switch (col) {
 		case 0: return item->Pid == 0 ? L"" : GetProcessName(item.get());
 		case 1:
-			text.Format(L"%u (0x%X)", item->Pid, item->Pid);
+			if(item->Pid > 0)
+				text.Format(L"%u (0x%X)", item->Pid, item->Pid);
 			break;
 
 		case 2: return ConnectionTypeToString(item->Type);
@@ -39,12 +40,15 @@ CString CConnectionsView::GetColumnText(HWND, int row, int col) const {
 			if(item->TimeStamp)
 				text.Format(L"%s.%03d", (PCWSTR)CTime(*(FILETIME*)&item->TimeStamp).Format(L"%x %X"), item->TimeStamp % 1000);
 			break;
+		case 9: return item->ModuleName.c_str();
+		case 10: return item->ModulePath.c_str();
 	}
 	return text;
 }
 
 int CConnectionsView::GetRowImage(HWND, int row) const {
-	return GetItemEx(m_Items[row].get())->Image;
+	const auto& item = m_Items[row].get();
+	return item->Pid == 0 ? -1 : GetItemEx(item)->Image;
 }
 
 const CString CConnectionsView::GetProcessName(Connection* conn) const {
@@ -79,6 +83,7 @@ void CConnectionsView::DoSort(const SortInfo* si) {
 			case 6: return SortHelper::SortNumbers(SwapBytes(i1->RemoteAddress), SwapBytes(i2->RemoteAddress), si->SortAscending);
 			case 7: return SortHelper::SortNumbers(i1->RemotePort, i2->RemotePort, si->SortAscending);
 			case 8: return SortHelper::SortNumbers(i1->TimeStamp, i2->TimeStamp, si->SortAscending);
+			case 9: return SortHelper::SortStrings(i1->ModuleName, i2->ModuleName, si->SortAscending);
 		}
 		return false;
 	};
@@ -287,11 +292,13 @@ LRESULT CConnectionsView::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lP
 	cm->AddColumn(L"Process ID", LVCFMT_RIGHT, 100);
 	cm->AddColumn(L"Protocol", LVCFMT_CENTER, 80);
 	cm->AddColumn(L"State", LVCFMT_LEFT, 80);
-	cm->AddColumn(L"Local Address", LVCFMT_RIGHT, 100);
+	cm->AddColumn(L"Local Address", LVCFMT_RIGHT, 150);
 	cm->AddColumn(L"Local Port", LVCFMT_RIGHT, 100);
-	cm->AddColumn(L"Remote Address", LVCFMT_RIGHT, 100);
+	cm->AddColumn(L"Remote Address", LVCFMT_RIGHT, 150);
 	cm->AddColumn(L"Remote Port", LVCFMT_RIGHT, 100);
 	cm->AddColumn(L"Create Time", LVCFMT_RIGHT, 140);
+	cm->AddColumn(L"Module Name", LVCFMT_LEFT, 180);
+//	cm->AddColumn(L"Module Path", LVCFMT_LEFT, 300);
 	cm->UpdateColumns();
 
 	DoRefresh();
