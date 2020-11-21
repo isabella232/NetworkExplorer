@@ -120,6 +120,12 @@
     <Image Include="res\run.ico">
       <Filter>Resource Files\Icons</Filter>
     </Image>
+    <Image Include="res\number-4.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\number-6.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

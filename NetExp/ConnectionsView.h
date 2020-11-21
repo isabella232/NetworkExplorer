@@ -34,6 +34,7 @@ public:
 
 	void DoRefresh();
 	void DoUpdate();
+	void OnActivate(bool activate);
 
 	static PCWSTR ConnectionTypeToString(ConnectionType type);
 	static PCWSTR ConnectionStateToString(MIB_TCP_STATE state);
@@ -50,6 +51,9 @@ public:
 		CHAIN_MSG_MAP(CVirtualListView<CConnectionsView>)
 		CHAIN_MSG_MAP(CCustomDraw<CConnectionsView>)
 		CHAIN_MSG_MAP(CViewBase<CConnectionsView>)
+	ALT_MSG_MAP(1)
+		COMMAND_RANGE_HANDLER(ID_PROTOCOLS_TCP, ID_PROTOCOLS_UDPV6, OnToggleProtocol)
+		CHAIN_MSG_MAP_ALT(CViewBase<CConnectionsView>, 1)
 	END_MSG_MAP()
 
 	// Handler prototypes (uncomment arguments if needed):
@@ -59,6 +63,7 @@ public:
 
 private:
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnToggleProtocol(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 	enum class ItemState { None, New, Deleted, DeletePending = 4};
 	struct ItemEx {

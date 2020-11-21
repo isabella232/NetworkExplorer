@@ -206,6 +206,16 @@ void CConnectionsView::DoUpdate() {
 	DoRefresh();
 }
 
+void CConnectionsView::OnActivate(bool activate) {
+	if (activate) {
+		auto ui = GetFrame()->GetUpdateUI();
+		const ConnectionType protocols[] = { ConnectionType::Tcp, ConnectionType::TcpV6, ConnectionType::Udp, ConnectionType::UdpV6 };
+		auto flags = m_Tracker.GetTrackingFlags();
+		for (int i = 0; i < _countof(protocols); i++)
+			ui->UISetCheck(ID_PROTOCOLS_TCP + i, (flags & protocols[i]) == protocols[i]);
+	}
+}
+
 PCWSTR CConnectionsView::ConnectionTypeToString(ConnectionType type) {
 	switch (type) {
 		case ConnectionType::Tcp: return L"TCP";
@@ -285,6 +295,17 @@ LRESULT CConnectionsView::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lP
 	cm->UpdateColumns();
 
 	DoRefresh();
+
+	return 0;
+}
+
+LRESULT CConnectionsView::OnToggleProtocol(WORD, WORD id, HWND, BOOL&) {
+	const ConnectionType protocols[] = { ConnectionType::Tcp, ConnectionType::TcpV6, ConnectionType::Udp, ConnectionType::UdpV6 };
+	int index = id - ID_PROTOCOLS_TCP;
+	auto flags = m_Tracker.GetTrackingFlags();
+	auto on = (flags & protocols[index]) != ConnectionType::Invalid;
+	m_Tracker.SetTrackingFlags(on ? (flags & ~protocols[index]) : (flags | protocols[index]));
+	GetFrame()->GetUpdateUI()->UISetCheck(id, on ? FALSE : TRUE);
 
 	return 0;
 }

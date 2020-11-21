@@ -70,6 +70,14 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Pause",                      ID_VIEW_PAUSE
         MENUITEM "&Refresh Now",                ID_VIEW_REFRESHNOW
+        MENUITEM SEPARATOR
+        POPUP "Protocols"
+        BEGIN
+            MENUITEM "&TCP",                        ID_PROTOCOLS_TCP
+            MENUITEM "T&CP V6",                     ID_PROTOCOLS_TCPV6
+            MENUITEM "&UDP",                        ID_PROTOCOLS_UDP
+            MENUITEM "U&DP V6",                     ID_PROTOCOLS_UDPV6
+        END
     END
     POPUP "&Network"
     BEGIN
@@ -110,6 +118,10 @@ IDI_PIN                 ICON                    "res\\pin_green.ico"
 IDI_REFRESH             ICON                    "res\\refresh.ico"
 
 IDI_RUN                 ICON                    "res\\run.ico"
+
+IDI_NUM4                ICON                    "res\\number-4.ico"
+
+IDI_NUM6                ICON                    "res\\number-6.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////

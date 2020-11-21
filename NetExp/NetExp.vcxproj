@@ -22,6 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{16C000E2-0B70-4277-A78B-A487717368B5}</ProjectGuid>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>NetExp</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -246,6 +247,8 @@
   <ItemGroup>
     <Image Include="res\connection.ico" />
     <Image Include="res\NetExp.ico" />
+    <Image Include="res\number-4.ico" />
+    <Image Include="res\number-6.ico" />
     <Image Include="res\pause.ico" />
     <Image Include="res\pin_green.ico" />
     <Image Include="res\refresh.ico" />

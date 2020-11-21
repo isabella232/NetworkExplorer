@@ -24,13 +24,22 @@ public:
 protected:
 	BEGIN_MSG_MAP(CViewBase)
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
-		COMMAND_ID_HANDLER(ID_VIEW_PAUSE, OnPauseResume)
-		COMMAND_ID_HANDLER(ID_VIEW_REFRESHNOW, OnRefresh)
+		MESSAGE_HANDLER(WM_FORWARDMSG, OnForwardMessage)
 		MESSAGE_HANDLER(OM_ACTIVATE_PAGE, OnActivate)
 //		COMMAND_RANGE_HANDLER(ID_UPDATEINTERVAL_1SECOND, ID_UPDATEINTERVAL_10SECONDS, OnUpdateInterval)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		CHAIN_MSG_MAP(TBase)
+	ALT_MSG_MAP(1)
+		COMMAND_ID_HANDLER(ID_VIEW_PAUSE, OnPauseResume)
+		COMMAND_ID_HANDLER(ID_VIEW_REFRESHNOW, OnRefresh)
 	END_MSG_MAP()
+
+	LRESULT OnForwardMessage(UINT, WPARAM, LPARAM lParam, BOOL& handled) {
+		auto msg = reinterpret_cast<MSG*>(lParam);
+		LRESULT result = 0;
+		handled = static_cast<T*>(this)->ProcessWindowMessage(msg->hwnd, msg->message, msg->wParam, msg->lParam, result, 1);
+		return result;
+	}
 
 	LRESULT OnActivate(UINT /*uMsg*/, WPARAM activate, LPARAM, BOOL&) {
 		auto pT = static_cast<T*>(this);
@@ -80,6 +89,7 @@ protected:
 			pT->KillTimer(1);
 		else
 			pT->SetTimer(1, GetUpdateInterval(), nullptr);
+		GetFrame()->GetUpdateUI()->UISetCheck(ID_VIEW_PAUSE, m_Paused);
 	}
 
 	LRESULT OnUpdateInterval(WORD, WORD id, HWND, BOOL&) {

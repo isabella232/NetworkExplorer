@@ -43,7 +43,9 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	SetMenu(nullptr);
 
 	CToolBarCtrl tb;
-	auto hWndToolBar = tb.Create(m_hWnd, nullptr, nullptr, ATL_SIMPLE_TOOLBAR_PANE_STYLE, 0, ATL_IDW_TOOLBAR);
+	auto hWndToolBar = tb.Create(m_hWnd, nullptr, nullptr, ATL_SIMPLE_TOOLBAR_PANE_STYLE | TBSTYLE_LIST, 0, ATL_IDW_TOOLBAR);
+	tb.SetExtendedStyle(TBSTYLE_EX_MIXEDBUTTONS);
+
 	InitToolBar(hWndToolBar, 24);
 
 	CreateSimpleReBar(ATL_SIMPLE_REBAR_NOBORDER_STYLE);
@@ -167,6 +169,11 @@ void CMainFrame::InitToolBar(HWND h, int size) {
 		{ ID_VIEW_REFRESHNOW, IDI_REFRESH },
 		{ 0 },
 		{ ID_NETWORK_ACTIVECONNECTIONS, IDI_CONNECTION },
+		{ 0 },
+		{ ID_PROTOCOLS_TCP, IDI_NUM4, BTNS_CHECK | BTNS_SHOWTEXT, L"TCP" },
+		{ ID_PROTOCOLS_TCPV6, IDI_NUM6, BTNS_CHECK | BTNS_SHOWTEXT, L"TCPv6" },
+		{ ID_PROTOCOLS_UDP, IDI_NUM4, BTNS_CHECK | BTNS_SHOWTEXT, L"UDP" },
+		{ ID_PROTOCOLS_UDPV6, IDI_NUM6, BTNS_CHECK | BTNS_SHOWTEXT, L"UDPv6" },
 		//{ ID_LISTVIEW_DETAILS, IDI_VIEW_DETAILS, BTNS_CHECKGROUP },
 		//{ ID_LISTVIEW_LARGEICONS, IDI_VIEW_ICONS, BTNS_CHECKGROUP },
 		//{ ID_LISTVIEW_SMALLICONS, IDI_VIEW_SMALLICONS, BTNS_CHECKGROUP },
@@ -224,5 +231,13 @@ LRESULT CMainFrame::OnTabActivated(int, LPNMHDR hdr, BOOL&) {
 		::SendMessage(hWnd, OM_ACTIVATE_PAGE, 1, 0);
 	m_CurrentPage = page;
 
+	return 0;
+}
+
+LRESULT CMainFrame::OnForwardCommand(WORD, WORD, HWND, BOOL&) {
+	auto page = m_view.GetActivePage();
+	if (page >= 0) {
+		return ::SendMessage(m_view.GetPageHWND(page), WM_FORWARDMSG, 1, reinterpret_cast<LPARAM>(m_pCurrentMsg));
+	}
 	return 0;
 }
