@@ -205,15 +205,15 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904B0"
+        BLOCK "040904b0"
         BEGIN
-            VALUE "FileDescription", "NetExp Module"
+            VALUE "FileDescription", "Network Explorer"
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "NetExp"
-            VALUE "LegalCopyright", "Copyright 2020"
+            VALUE "LegalCopyright", "©2020 Pavel Yosifovich"
             VALUE "OriginalFilename", "NetExp.exe"
-            VALUE "ProductName", "NetExp Module"
-            VALUE "ProductVersion", "1, 0, 0, 1"
+            VALUE "ProductName", "Network Explorer"
+            VALUE "ProductVersion", "0, 1, 0, 1"
         END
     END
     BLOCK "VarFileInfo"

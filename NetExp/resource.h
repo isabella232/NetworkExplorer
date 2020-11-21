@@ -23,15 +23,14 @@
 #define ID_PROTOCOLS_TCPV6              32782
 #define ID_PROTOCOLS_UDP                32783
 #define ID_PROTOCOLS_UDPV6              32784
-#define ID_FILE_RUNASADMINITORATOR      32785
-#define ID_FILE_RUNASADMINISTRATOR      32786
+#define ID_FILE_RUNASADMINISTRATOR      32785
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        209
-#define _APS_NEXT_COMMAND_VALUE         32787
+#define _APS_NEXT_COMMAND_VALUE         32786
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
