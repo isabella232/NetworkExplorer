@@ -20,6 +20,7 @@
 #include <atlapp.h>
 #include <atlstr.h>
 #include <atltime.h>
+#include <atlsplit.h>
 
 extern CAppModule _Module;
 

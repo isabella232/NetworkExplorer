@@ -4,10 +4,11 @@
 
 #include "pch.h"
 #include "resource.h"
+#include "MainFrm.h"
 #include "aboutdlg.h"
 #include "ConnectionsView.h"
 #include "SecurityHelper.h"
-#include "MainFrm.h"
+#include "NetworkInfoView.h"
 
 const int WINDOW_MENU_POSITION = 5;
 
@@ -58,7 +59,10 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	m_hWndClient = m_view.Create(m_hWnd, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
 	CImageList images;
 	images.Create(16, 16, ILC_COLOR32, 4, 4);
-	images.AddIcon(AtlLoadIconImage(IDI_CONNECTION, 0, 16, 16));
+	UINT icons[] = { IDI_CONNECTION, IDI_NETWORK_INFO };
+	for(auto icon : icons)
+		images.AddIcon(AtlLoadIconImage(icon, 0, 16, 16));
+
 	m_view.SetImageList(images);
 
 	UIAddToolBar(hWndToolBar);
@@ -197,6 +201,7 @@ void CMainFrame::InitCommandBar() {
 		{ ID_VIEW_REFRESHNOW, IDI_REFRESH },
 		{ ID_VIEW_PAUSE, IDI_PAUSE },
 		{ ID_NETWORK_ACTIVECONNECTIONS, IDI_CONNECTION },
+		{ ID_NETWORK_INFORMATION, IDI_NETWORK_INFO },
 		{ ID_FILE_RUNASADMINISTRATOR, 0, SecurityHelper::GetShieldIcon() },
 	};
 	for (auto& cmd : cmds) {
@@ -246,5 +251,19 @@ LRESULT CMainFrame::OnRunAsAdmin(WORD, WORD, HWND, BOOL&) {
 	if (SecurityHelper::RunElevated()) {
 		SendMessage(WM_CLOSE);
 	}
+	return 0;
+}
+
+LRESULT CMainFrame::OnNetworkInformation(WORD, WORD, HWND, BOOL&) {
+	auto pView = new CNetworkInfoView(this);
+	pView->Create(m_view, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
+	m_view.AddPage(pView->m_hWnd, pView->GetHeader(), 1, pView);
+	return 0;
+}
+
+LRESULT CMainFrame::OnAlwaysOnTop(WORD, WORD id, HWND, BOOL&) {
+	bool onTop = GetExStyle() & WS_EX_TOPMOST;
+	SetWindowPos(onTop ? HWND_NOTOPMOST : HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+	UISetCheck(id, !onTop);
 	return 0;
 }

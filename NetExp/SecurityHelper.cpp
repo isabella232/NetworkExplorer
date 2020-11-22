@@ -28,60 +28,6 @@ bool SecurityHelper::RunElevated() {
 	return (INT_PTR)::ShellExecute(nullptr, L"runas", path, nullptr, nullptr, SW_SHOWDEFAULT) > 31;
 }
 
-bool SecurityHelper::IsTokenAdminGroup() {
-	DWORD		tokenInfoBufLen;
-	PVOID		tokenInfoBuf;
-	PTOKEN_GROUPS	tokenGroups;
-	SID_IDENTIFIER_AUTHORITY	ntauth = SECURITY_NT_AUTHORITY;
-	void* psidAdmin = NULL;
-	BOOLEAN		isAdmin = FALSE;
-	HANDLE		hToken;
-	DWORD		i;
-
-	OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken);
-
-	//
-	// Allocate admin group SID
-	//
-	AllocateAndInitializeSid(&ntauth, 2,
-		SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS,
-		0, 0, 0, 0, 0, 0, &psidAdmin);
-
-	//
-	// Check the user field first
-	//
-	GetTokenInformation(hToken,
-		TokenGroups,
-		NULL,
-		0,
-		&tokenInfoBufLen);
-	tokenInfoBuf = malloc(tokenInfoBufLen);
-	if (GetTokenInformation(hToken,
-		TokenGroups,
-		tokenInfoBuf,
-		tokenInfoBufLen,
-		&tokenInfoBufLen)) {
-
-		tokenGroups = (PTOKEN_GROUPS)tokenInfoBuf;
-
-
-		for (i = 0; i < tokenGroups->GroupCount; ++i) {
-
-			if (EqualSid(psidAdmin, tokenGroups->Groups[i].Sid) &&
-				tokenGroups->Groups[i].Attributes & SE_GROUP_ENABLED &&
-				tokenGroups->Groups[i].Attributes & ~SE_GROUP_USE_FOR_DENY_ONLY) {
-
-				break;
-			}
-		}
-		isAdmin = (i != tokenGroups->GroupCount);
-	}
-	free(tokenInfoBuf);
-	FreeSid(psidAdmin);
-	CloseHandle(hToken);
-	return isAdmin;
-}
-
 HICON SecurityHelper::GetShieldIcon() {
 	SHSTOCKICONINFO ssii = { sizeof(ssii) };
 	if (FAILED(::SHGetStockIconInfo(SIID_SHIELD, SHGSI_SMALLICON | SHGSI_ICON, &ssii)))

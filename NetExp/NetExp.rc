@@ -84,6 +84,7 @@ BEGIN
     POPUP "&Network"
     BEGIN
         MENUITEM "Active &Connections",         ID_NETWORK_ACTIVECONNECTIONS
+        MENUITEM "&Information",                ID_NETWORK_INFORMATION
     END
     POPUP "&Options"
     BEGIN
@@ -124,6 +125,18 @@ IDI_RUN                 ICON                    "res\\run.ico"
 IDI_NUM4                ICON                    "res\\number-4.ico"
 
 IDI_NUM6                ICON                    "res\\number-6.ico"
+
+IDI_NETWORK_INFO        ICON                    "res\\computer_network-info.ico"
+
+IDI_NIC                 ICON                    "res\\hardware.ico"
+
+IDI_INTERFACE           ICON                    "res\\interface.ico"
+
+IDI_USB                 ICON                    "res\\logo_usb.ico"
+
+IDI_WIRELESS            ICON                    "res\\logo_wireless.ico"
+
+IDI_TABLE               ICON                    "res\\table.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////

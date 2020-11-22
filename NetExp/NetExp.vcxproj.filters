@@ -16,6 +16,12 @@
     <Filter Include="Resource Files\Icons">
       <UniqueIdentifier>{7c4393bb-2359-4861-ad92-d2b4bd49a318}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Views">
+      <UniqueIdentifier>{35f942f9-bbee-42fd-a749-f8200d696237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{014ac379-3f12-497c-b564-dc428cc62fa8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NetExp.cpp">
@@ -30,16 +36,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ConnectionsView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ClipboardHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IniFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SortHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ColumnManager.cpp">
@@ -51,7 +48,25 @@
     <ClCompile Include="ProcessManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NetworkInfoView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectionsView.cpp">
+      <Filter>Views</Filter>
+    </ClCompile>
+    <ClCompile Include="ClipboardHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
     <ClCompile Include="SecurityHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="SortHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkInformation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FormatHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,19 +83,10 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ConnectionsView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IMainFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ClipboardHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IniFile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SortHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ViewBase.h">
@@ -98,7 +104,25 @@
     <ClInclude Include="ProcessManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ConnectionsView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkInfoView.h">
+      <Filter>Views</Filter>
+    </ClInclude>
     <ClInclude Include="SecurityHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="SortHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ClipboardHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkInformation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FormatHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -130,6 +154,24 @@
       <Filter>Resource Files\Icons</Filter>
     </Image>
     <Image Include="res\number-6.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\computer_network-info.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\hardware.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\interface.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\logo_usb.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\logo_wireless.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\table.ico">
       <Filter>Resource Files\Icons</Filter>
     </Image>
   </ItemGroup>

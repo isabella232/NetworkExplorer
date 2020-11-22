@@ -218,9 +218,12 @@
     <ClCompile Include="ActiveConnectionTracker.cpp" />
     <ClCompile Include="ClipboardHelper.cpp" />
     <ClCompile Include="ColumnManager.cpp" />
+    <ClCompile Include="FormatHelper.cpp" />
     <ClCompile Include="IniFile.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="NetExp.cpp" />
+    <ClCompile Include="NetworkInformation.cpp" />
+    <ClCompile Include="NetworkInfoView.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -237,9 +240,12 @@
     <ClInclude Include="ActiveConnectionTracker.h" />
     <ClInclude Include="ClipboardHelper.h" />
     <ClInclude Include="ColumnManager.h" />
+    <ClInclude Include="FormatHelper.h" />
     <ClInclude Include="IMainFrame.h" />
     <ClInclude Include="IniFile.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="NetworkInformation.h" />
+    <ClInclude Include="NetworkInfoView.h" />
     <ClInclude Include="ProcessManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="pch.h" />
@@ -253,7 +259,12 @@
     <ResourceCompile Include="NetExp.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\computer_network-info.ico" />
     <Image Include="res\connection.ico" />
+    <Image Include="res\hardware.ico" />
+    <Image Include="res\interface.ico" />
+    <Image Include="res\logo_usb.ico" />
+    <Image Include="res\logo_wireless.ico" />
     <Image Include="res\NetExp.ico" />
     <Image Include="res\number-4.ico" />
     <Image Include="res\number-6.ico" />
@@ -261,6 +272,7 @@
     <Image Include="res\pin_green.ico" />
     <Image Include="res\refresh.ico" />
     <Image Include="res\run.ico" />
+    <Image Include="res\table.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
