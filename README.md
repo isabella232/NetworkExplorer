@@ -1,4 +1,4 @@
-# NetworkExplorer
+# Network Explorer
 
 ## Windows Network Information
 
