@@ -34,8 +34,9 @@ std::vector<InterfaceInfo> NetworkInformation::EnumInterfaces() {
 
     PMIB_IF_TABLE2 table;
     if (::GetIfTable2(&table) == ERROR_SUCCESS) {
-        interfaces.reserve(table->NumEntries);
-        for (DWORD i = 0; i < table->NumEntries; i++) {
+        auto count = table->NumEntries;
+        interfaces.reserve(count);
+        for (DWORD i = 0; i < count; i++) {
             auto& iface = table->Table[i];
             InterfaceInfo info = *(InterfaceInfo*)&iface;
             interfaces.push_back(info);
@@ -43,4 +44,22 @@ std::vector<InterfaceInfo> NetworkInformation::EnumInterfaces() {
         ::FreeMibTable(table);
     }
     return interfaces;
+}
+
+std::vector<MIB_IPADDRROW> NetworkInformation::EnumIPAddressTable() {
+    DWORD size = 1 << 17;
+    std::vector<MIB_IPADDRROW> addresses;
+
+    auto buffer = ::VirtualAlloc(nullptr, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (buffer) {
+        auto table = (PMIB_IPADDRTABLE)buffer;
+        if (ERROR_SUCCESS == ::GetIpAddrTable(table, &size, FALSE)) {
+            auto count = table->dwNumEntries;
+            addresses.reserve(count);
+            for (DWORD i = 0; i < count; i++) {
+                addresses.push_back(table->table[i]);
+            }
+        }
+    }
+    return addresses;
 }

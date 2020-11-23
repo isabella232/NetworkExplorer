@@ -20,5 +20,6 @@ static_assert(sizeof(InterfaceInfo) == sizeof(MIB_IF_ROW2));
 struct NetworkInformation {
 	static std::vector<AdapterInfo> EnumAdapters();
 	static std::vector<InterfaceInfo> EnumInterfaces();
+	static std::vector<MIB_IPADDRROW > EnumIPAddressTable();
 };
 

@@ -14,7 +14,7 @@ public:
 
 	CNetworkInfoView(IMainFrame* frame) : CViewBase(frame) {}
 
-	CString GetColumnText(HWND, int row, int col) const;
+	CString GetColumnText(HWND, int row, int col);
 
 	PCWSTR GetHeader() const;
 
@@ -22,6 +22,7 @@ public:
 
 	static PCWSTR NodeTypeToString(UINT type);
 	static PCWSTR InterfaceTypeToString(IFTYPE type);
+	static CString AddressTypeToString(WORD type);
 
 	BEGIN_MSG_MAP(CNetworkInfoView)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
@@ -69,6 +70,7 @@ private:
 	void UpdateList();
 	void AddAdapters(CTreeItem parent);
 	void AddInterfaces(CTreeItem parent);
+	void SetIPTableNodeItems();
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnTreeItemChanged(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/);
@@ -76,12 +78,13 @@ private:
 	CSplitterWindow m_Splitter;
 	CTreeViewCtrlEx m_Tree;
 	CListViewCtrl m_List;
-	CTreeItem m_SelectedNode, m_GeneralNode, m_AdaptersNode, m_InterfacesNode;
+	CTreeItem m_SelectedNode, m_GeneralNode, m_AdaptersNode, m_InterfacesNode, m_IPTableNode;
 	BYTE m_FixedInfoBuffer[1 << 10];
 	PFIXED_INFO m_FixedInfo;
 	std::vector<InterfaceInfo> m_Interfaces;
 	std::vector<AdapterInfo> m_Adapters;
 	std::vector<GenericItem> m_Items;
+	std::vector<MIB_IPADDRROW> m_IPTable;
 	bool m_IsGenericNode{ false };
 };
 

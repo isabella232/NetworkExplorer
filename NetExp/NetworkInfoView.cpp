@@ -2,12 +2,24 @@
 #include "NetworkInfoView.h"
 #include "FormatHelper.h"
 
-CString CNetworkInfoView::GetColumnText(HWND, int row, int col) const {
-	auto& item = m_Items[row];
+CString CNetworkInfoView::GetColumnText(HWND, int row, int col) {
 	if (m_IsGenericNode) {
+		auto& item = m_Items[row];
 		switch (col) {
 			case 0: return item.Property;
 			case 1: return item.ValueFn ? item.ValueFn() : item.Value;
+		}
+	}
+	else if (m_SelectedNode == m_IPTableNode) {
+		auto& item = m_IPTable[row];
+		CString text;
+		switch (col) {
+			case 0: text.Format(L"%3d", item.dwIndex); return text;
+			case 1: return FormatHelper::IPv4AddressToString(item.dwAddr);
+			case 2: return FormatHelper::IPv4AddressToString(item.dwMask);
+			case 3: return FormatHelper::IPv4AddressToString(item.dwBCastAddr);
+			case 4: return FormatHelper::Format(item.dwReasmSize);
+			case 5: return AddressTypeToString(item.wType);
 		}
 	}
 	return CString();
@@ -238,9 +250,32 @@ PCWSTR CNetworkInfoView::InterfaceTypeToString(IFTYPE type) {
 	return names[type - 1];
 }
 
+CString CNetworkInfoView::AddressTypeToString(WORD type) {
+	CString result;
+	static const struct {
+		WORD value;
+		PCWSTR text;
+	} types[] = {
+		{ MIB_IPADDR_PRIMARY, L"Primary" },
+		{ MIB_IPADDR_DYNAMIC, L"Dynamic" },
+		{ MIB_IPADDR_DISCONNECTED, L"Disconnected" },
+		{ MIB_IPADDR_DELETED, L"Deleted" },
+		{ MIB_IPADDR_TRANSIENT, L"Transient" },
+	};
+
+	for(auto& t : types)
+		if((t.value & type) == t.value)
+			(result += t.text) += L", ";
+
+	if (!result.IsEmpty())
+		result = result.Left(result.GetLength() - 2);
+	return result;
+}
+
 void CNetworkInfoView::SetAdapterNodeItems(const AdapterInfo& adapter) {
 	m_Items.clear();
 	SetListViewPropertyColumns();
+	m_IsGenericNode = true;
 
 	m_Items = {
 		GenericItem(AdapterFriendlyName, L"Friendly Name", CString(adapter.FriendlyName.c_str())),
@@ -255,6 +290,7 @@ void CNetworkInfoView::SetAdapterNodeItems(const AdapterInfo& adapter) {
 void CNetworkInfoView::SetInterfaceNodeItems(const InterfaceInfo& iface) {
 	m_Items.clear();
 	SetListViewPropertyColumns();
+	m_IsGenericNode = true;
 
 	m_Items = {
 		GenericItem(IfDesc, L"Description", CString(iface.Description)),
@@ -267,6 +303,7 @@ void CNetworkInfoView::SetInterfaceNodeItems(const InterfaceInfo& iface) {
 }
 
 void CNetworkInfoView::SetGeneralNodeItems() {
+	m_IsGenericNode = true;
 	ULONG size = sizeof(m_FixedInfoBuffer);
 	m_FixedInfo = (PFIXED_INFO)m_FixedInfoBuffer;
 	::GetNetworkParams(m_FixedInfo, &size);
@@ -320,7 +357,7 @@ void CNetworkInfoView::BuildTree() {
 	item = m_InterfacesNode = m_Tree.InsertItem(L"Interfaces", 2, 2, TVI_ROOT, TVI_LAST);
 	AddInterfaces(item);
 	item.SortChildren(FALSE);
-	item = m_Tree.InsertItem(L"Address Table", 3, 3, TVI_ROOT, TVI_LAST);
+	m_IPTableNode = m_Tree.InsertItem(L"Address Table", 3, 3, TVI_ROOT, TVI_LAST);
 
 	m_Tree.LockWindowUpdate(FALSE);
 }
@@ -328,7 +365,9 @@ void CNetworkInfoView::BuildTree() {
 void CNetworkInfoView::UpdateList() {
 	if (m_SelectedNode == m_GeneralNode) {
 		SetGeneralNodeItems();
-		m_IsGenericNode = true;
+	}
+	else if (m_SelectedNode == m_IPTableNode) {
+		SetIPTableNodeItems();
 	}
 	else if (m_SelectedNode.GetParent() == m_AdaptersNode) {
 		SetAdapterNodeItems(m_Adapters[m_SelectedNode.GetData()]);
@@ -358,6 +397,24 @@ void CNetworkInfoView::AddInterfaces(CTreeItem parent) {
 	m_Interfaces = std::move(interfaces);
 }
 
+void CNetworkInfoView::SetIPTableNodeItems() {
+	while (m_List.DeleteColumn(0));
+
+	m_IsGenericNode = false;
+	auto cm = GetColumnManager(m_List);
+	cm->Clear();
+	cm->AddColumn(L"If Index", LVCFMT_LEFT, 70);
+	cm->AddColumn(L"Address", LVCFMT_RIGHT, 120);
+	cm->AddColumn(L"Mask", LVCFMT_RIGHT, 120);
+	cm->AddColumn(L"Broadcast Addr", LVCFMT_RIGHT, 120);
+	cm->AddColumn(L"Reasm Size", LVCFMT_RIGHT, 120);
+	cm->AddColumn(L"Type", LVCFMT_LEFT, 200);
+	cm->UpdateColumns();
+
+	m_IPTable = NetworkInformation::EnumIPAddressTable();
+	m_List.SetItemCount((int)m_IPTable.size());
+}
+
 LRESULT CNetworkInfoView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 	m_hWndClient = m_Splitter.Create(*this, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, WS_EX_CLIENTEDGE);
 	m_Tree.Create(m_Splitter, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS |
@@ -376,7 +433,7 @@ LRESULT CNetworkInfoView::OnCreate(UINT, WPARAM, LPARAM, BOOL&) {
 
 	//m_Splitter.SetSplitterExtendedStyle(SPLIT_FLATBAR | SPLIT_PROPORTIONAL);
 	m_Splitter.SetSplitterPanes(m_Tree, m_List);
-	m_Splitter.SetSplitterPosPct(35);
+	m_Splitter.SetSplitterPosPct(30);
 
 	BuildTree();
 	m_GeneralNode.Select();
