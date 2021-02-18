@@ -38,7 +38,7 @@ CString CConnectionsView::GetColumnText(HWND, int row, int col) const {
 			break;
 		case 8: 
 			if(item->TimeStamp)
-				text.Format(L"%s.%03d", (PCWSTR)CTime(*(FILETIME*)&item->TimeStamp).Format(L"%x %X"), item->TimeStamp % 1000);
+				text.Format(L"%s.%03d", (PCWSTR)CTime(*(FILETIME*)&item->TimeStamp).Format(L"%x %X"), int(item->TimeStamp % 1000));
 			break;
 		case 9: return item->ModuleName.c_str();
 		case 10: return item->ModulePath.c_str();
@@ -293,9 +293,9 @@ LRESULT CConnectionsView::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lP
 	cm->AddColumn(L"Protocol", LVCFMT_CENTER, 80);
 	cm->AddColumn(L"State", LVCFMT_LEFT, 80);
 	cm->AddColumn(L"Local Address", LVCFMT_RIGHT, 150);
-	cm->AddColumn(L"Local Port", LVCFMT_RIGHT, 100);
+	cm->AddColumn(L"Local Port", LVCFMT_RIGHT, 90);
 	cm->AddColumn(L"Remote Address", LVCFMT_RIGHT, 150);
-	cm->AddColumn(L"Remote Port", LVCFMT_RIGHT, 100);
+	cm->AddColumn(L"Remote Port", LVCFMT_RIGHT, 90);
 	cm->AddColumn(L"Create Time", LVCFMT_RIGHT, 140);
 	cm->AddColumn(L"Module Name", LVCFMT_LEFT, 180);
 //	cm->AddColumn(L"Module Path", LVCFMT_LEFT, 300);

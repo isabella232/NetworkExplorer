@@ -132,6 +132,9 @@ int ColumnManager::AddColumn(PCWSTR name, int format, int width, ColumnFlags fla
 
 void ColumnManager::Clear() {
 	m_Columns.clear();
+	if (m_ListView)
+		while (m_ListView.DeleteColumn(0))
+			;
 }
 
 void ColumnManager::UpdateColumns() {

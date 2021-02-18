@@ -234,6 +234,7 @@
     <ClCompile Include="ProcessManager.cpp" />
     <ClCompile Include="SecurityHelper.cpp" />
     <ClCompile Include="SortHelper.cpp" />
+    <ClCompile Include="ToStringHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
@@ -252,6 +253,7 @@
     <ClInclude Include="ConnectionsView.h" />
     <ClInclude Include="SecurityHelper.h" />
     <ClInclude Include="SortHelper.h" />
+    <ClInclude Include="ToStringHelper.h" />
     <ClInclude Include="ViewBase.h" />
     <ClInclude Include="VirtualListView.h" />
   </ItemGroup>
@@ -259,6 +261,7 @@
     <ResourceCompile Include="NetExp.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\activity.ico" />
     <Image Include="res\computer_network-info.ico" />
     <Image Include="res\connection.ico" />
     <Image Include="res\hardware.ico" />

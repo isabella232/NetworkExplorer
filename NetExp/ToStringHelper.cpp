@@ -1,0 +1,250 @@
+#include "pch.h"
+#include "ToStringHelper.h"
+
+PCWSTR ToStringHelper::NodeTypeToString(UINT type) {
+	switch (type) {
+		case BROADCAST_NODETYPE: return L"Broadcast";
+		case PEER_TO_PEER_NODETYPE: return L"Peer to peer";
+		case MIXED_NODETYPE: return L"Mixed";
+		case HYBRID_NODETYPE: return L"Hybrid";
+	}
+	return L"(Unknown)";
+}
+
+PCWSTR ToStringHelper::InterfaceTypeToString(IFTYPE type) {
+	PCWSTR names[] = {
+		L"OTHER",
+		L"REGULAR_1822",
+		L"HDH_1822",
+		L"DDN_X25",
+		L"RFC877_X25",
+		L"ETHERNET CSMACD",
+		L"IS088023 CSMACD",
+		L"ISO88024 TOKENBUS",
+		L"ISO88025 TOKENRING",
+		L"ISO88026 MAN",
+		L"STARLAN",
+		L"PROTEON 10M Bit",
+		L"PROTEON 80M Bit",
+		L"HYPERCHANNEL",
+		L"FDDI",
+		L"LAP_B",
+		L"SDLC",
+		L"DS1",
+		L"E1",
+		L"Basic ISDN",
+		L"PRIMARY_ISDN",
+		L"PROP_POINT2POINT_SERIAL",
+		L"PPP",
+		L"Software Loopback",
+		L"EON",
+		L"ETHERNET 3M Bit",
+		L"NSIP",
+		L"SLIP",
+		L"ULTRA",
+		L"DS3",
+		L"SIP",
+		L"FRAMERELAY",
+		L"RS232",
+		L"PARA",
+		L"ARCNET",
+		L"ARCNET_PLUS",
+		L"ATM",
+		L"MIO_X25",
+		L"SONET",
+		L"X25_PLE",
+		L"ISO88022_LLC",
+		L"LOCALTALK",
+		L"SMDS_DXI",
+		L"Frame Relay Service",
+		L"V35",
+		L"HSSI",
+		L"HIPPI",
+		L"MODEM",
+		L"AAL5",
+		L"SONET_PATH",
+		L"SONET_VT",
+		L"SMDS_ICIP",
+		L"PROP_VIRTUAL",
+		L"PROP_MULTIPLEXOR",
+		L"IEEE802.12",
+		L"FIBRECHANNEL",
+		L"HIPPIINTERFACE",
+		L"FRAMERELAY INTERCONNECT",
+		L"AFLANE_8023",
+		L"AFLANE_8025",
+		L"CCTEMUL",
+		L"FASTETHER",
+		L"ISDN",
+		L"V11",
+		L"V36",
+		L"G703_64K",
+		L"G703_2MB",
+		L"QLLC",
+		L"FASTETHER_FX",
+		L"CHANNEL",
+		L"IEEE 802.11",
+		L"IBM370PARCHAN",
+		L"ESCON",
+		L"DLSW",
+		L"ISDN_S",
+		L"ISDN_U",
+		L"LAP_D",
+		L"IPSWITCH",
+		L"RSRB",
+		L"ATM_LOGICAL",
+		L"DS0",
+		L"DS0_BUNDLE",
+		L"BSC",
+		L"ASYNC",
+		L"CNR",
+		L"ISO88025R_DTR",
+		L"EPLRS",
+		L"ARAP",
+		L"PROP_CNLS",
+		L"HOSTPAD",
+		L"TERMPAD",
+		L"FRAMERELAY_MPI",
+		L"X213",
+		L"ADSL",
+		L"RADSL",
+		L"SDSL",
+		L"VDSL",
+		L"ISO88025_CRFPRINT",
+		L"MYRINET",
+		L"VOICE_EM",
+		L"VOICE_FXO",
+		L"VOICE_FXS",
+		L"VOICE_ENCAP",
+		L"VOICE_OVERIP",
+		L"ATM_DXI",
+		L"ATM_FUNI",
+		L"ATM_IMA",
+		L"PPPMULTILINKBUNDLE",
+		L"IPOVER_CDLC",
+		L"IPOVER_CLAW",
+		L"STACKTOSTACK",
+		L"VIRTUALIPADDRESS",
+		L"MPC",
+		L"IPOVER_ATM",
+		L"ISO88025_FIBER",
+		L"TDLC",
+		L"GIGABITETHERNET",
+		L"HDLC",
+		L"LAP_F",
+		L"V37",
+		L"X25_MLP",
+		L"X25_HUNTGROUP",
+		L"TRANSPHDLC",
+		L"INTERLEAVE",
+		L"FAST",
+		L"IP",
+		L"DOCSCABLE_MACLAYER",
+		L"DOCSCABLE_DOWNSTREAM",
+		L"DOCSCABLE_UPSTREAM",
+		L"A12MPPSWITCH",
+		L"TUNNEL",
+		L"COFFEE",
+		L"CES",
+		L"ATM_SUBINTERFACE",
+		L"L2_VLAN",
+		L"L3_IPVLAN",
+		L"L3_IPXVLAN",
+		L"DIGITALPOWERLINE",
+		L"MEDIAMAILOVERIP",
+		L"DTM",
+		L"DCN",
+		L"IPFORWARD",
+		L"MSDSL",
+		L"IEEE 1394 (Firewire)",
+		L"IF_GSN",
+		L"DVBRCC_MACLAYER",
+		L"DVBRCC_DOWNSTREAM",
+		L"DVBRCC_UPSTREAM",
+		L"ATM_VIRTUAL",
+		L"MPLS_TUNNEL",
+		L"SRP",
+		L"VOICEOVERATM",
+		L"VOICEOVERFRAMERELAY",
+		L"IDSL",
+		L"COMPOSITELINK",
+		L"SS7_SIGLINK",
+		L"PROP_WIRELESS_P2P",
+		L"FR_FORWARD",
+		L"RFC1483",
+		L"USB",
+		L"IEEE8023AD_LAG",
+		L"BGP_POLICY_ACCOUNTING",
+		L"FRF16_MFR_BUNDLE",
+		L"H323_GATEKEEPER",
+		L"H323_PROXY",
+		L"MPLS",
+		L"MF_SIGLINK",
+		L"HDSL2",
+		L"SHDSL",
+		L"DS1_FDL",
+		L"POS",
+		L"DVB_ASI_IN",
+		L"DVB_ASI_OUT",
+		L"PLC",
+		L"NFAS",
+		L"TR008",
+		L"GR303_RDT",
+		L"GR303_IDT",
+		L"ISUP",
+		L"PROP_DOCS_WIRELESS_MACLAYER",
+		L"PROP_DOCS_WIRELESS_DOWNSTREAM",
+		L"PROP_DOCS_WIRELESS_UPSTREAM",
+		L"HIPERLAN2",
+		L"PROP_BWA_P2MP",
+		L"SONET_OVERHEAD_CHANNEL",
+		L"DIGITAL_WRAPPER_OVERHEAD_CHANNEL",
+		L"AAL2",
+		L"RADIO_MAC",
+		L"ATM_RADIO",
+		L"IMT",
+		L"MVL",
+		L"REACH_DSL",
+		L"FR_DLCI_ENDPT",
+		L"ATM_VCI_ENDPT",
+		L"OPTICAL CHANNEL",
+		L"OPTICAL TRANSPORT",
+	};
+
+	ATLASSERT(type > 0 && type <= _countof(names));
+	if (type < 1 || type > _countof(names))
+		return L"(Unknown)";
+
+	return names[type - 1];
+}
+
+CString ToStringHelper::AddressTypeToString(WORD type) {
+	CString result;
+	static const struct {
+		WORD value;
+		PCWSTR text;
+	} types[] = {
+		{ MIB_IPADDR_PRIMARY, L"Primary" },
+		{ MIB_IPADDR_DYNAMIC, L"Dynamic" },
+		{ MIB_IPADDR_DISCONNECTED, L"Disconnected" },
+		{ MIB_IPADDR_DELETED, L"Deleted" },
+		{ MIB_IPADDR_TRANSIENT, L"Transient" },
+	};
+
+	for (auto& t : types)
+		if ((t.value & type) == t.value)
+			(result += t.text) += L", ";
+
+	if (!result.IsEmpty())
+		result = result.Left(result.GetLength() - 2);
+	return result;
+}
+
+PCWSTR ToStringHelper::InterfaceConnectionTypeToString(NET_IF_CONNECTION_TYPE type) {
+	switch (type) {
+		case NET_IF_CONNECTION_DEDICATED: return L"Dedicated";
+		case NET_IF_CONNECTION_DEMAND: return L"Demand";
+		case NET_IF_CONNECTION_PASSIVE: return L"Passive";
+	}
+	return L"(Unknown)";
+}

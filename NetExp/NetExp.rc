@@ -138,6 +138,8 @@ IDI_WIRELESS            ICON                    "res\\logo_wireless.ico"
 
 IDI_TABLE               ICON                    "res\\table.ico"
 
+IDI_ACTIVITY            ICON                    "res\\activity.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

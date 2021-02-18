@@ -2,6 +2,7 @@
 #include "ActiveConnectionTracker.h"
 
 #pragma comment(lib, "Iphlpapi")
+#pragma comment(lib, "Ws2_32")
 
 int ActiveConnectionTracker::EnumConnections() {
 	DWORD size = 1 << 16;
@@ -100,8 +101,8 @@ void ActiveConnectionTracker::AddTcp4Connections(PMIB_TCPTABLE_OWNER_MODULE tabl
 			Connection key;
 			key.LocalAddress = item.dwLocalAddr;
 			key.RemoteAddress = item.dwRemoteAddr;
-			key.LocalPort = item.dwLocalPort;
-			key.RemotePort = item.dwRemotePort;
+			key.LocalPort = ntohs((USHORT)item.dwLocalPort);
+			key.RemotePort = ntohs((USHORT)item.dwRemotePort);
 			key.Pid = item.dwOwningPid;
 			key.Type = ConnectionType::Tcp;
 
@@ -136,10 +137,10 @@ void ActiveConnectionTracker::AddTcp6Connections(PMIB_TCP6TABLE_OWNER_MODULE tab
 		}
 		else {
 			Connection key;
-			key.LocalPort = item.dwLocalPort;
+			key.LocalPort = ntohs((USHORT)item.dwLocalPort);
 			::memcpy(key.ucLocalAddrress, item.ucLocalAddr, sizeof(key.ucLocalAddrress));
 			::memcpy(key.ucRemoteAddrress, item.ucRemoteAddr, sizeof(key.ucRemoteAddrress));
-			key.RemotePort = item.dwRemotePort;
+			key.RemotePort = ntohs((USHORT)item.dwRemotePort);
 			key.Pid = item.dwOwningPid;
 			key.Type = ConnectionType::TcpV6;
 
@@ -175,7 +176,7 @@ void ActiveConnectionTracker::AddUdp4Connections(PMIB_UDPTABLE_OWNER_MODULE tabl
 		else {
 			Connection key;
 			key.LocalAddress = item.dwLocalAddr;
-			key.LocalPort = item.dwLocalPort;
+			key.LocalPort = ntohs((USHORT)item.dwLocalPort);
 			key.Pid = item.dwOwningPid;
 			key.Type = ConnectionType::Udp;
 
@@ -201,7 +202,7 @@ void ActiveConnectionTracker::InitUdp4Connection(Connection* conn, const MIB_UDP
 		conn->ModuleName = moduleInfo->pModuleName;
 		conn->ModulePath = moduleInfo->pModulePath;
 	}
-	conn->LocalPort = item.dwLocalPort;
+	conn->LocalPort = ntohs((USHORT)item.dwLocalPort);
 	conn->LocalAddress = item.dwLocalAddr;
 	conn->Pid = item.dwOwningPid;
 	conn->Type = ConnectionType::Udp;
@@ -218,10 +219,10 @@ void ActiveConnectionTracker::InitTcp4Connection(Connection* conn, const MIB_TCP
 	}
 	conn->Pid = item.dwOwningPid;
 	conn->TimeStamp = item.liCreateTimestamp.QuadPart;
-	conn->LocalPort = item.dwLocalPort;
+	conn->LocalPort = ntohs((USHORT)item.dwLocalPort);
 	conn->LocalAddress = item.dwLocalAddr;
 	conn->RemoteAddress = item.dwRemoteAddr;
-	conn->RemotePort = item.dwRemotePort;
+	conn->RemotePort = ntohs((USHORT)item.dwRemotePort);
 	conn->TimeStamp = item.liCreateTimestamp.QuadPart;
 	conn->Type = ConnectionType::Tcp;
 }
@@ -235,8 +236,8 @@ void ActiveConnectionTracker::InitTcp6Connection(Connection* conn, const MIB_TCP
 	}
 	conn->Pid = item.dwOwningPid;
 	conn->TimeStamp = item.liCreateTimestamp.QuadPart;
-	conn->LocalPort = item.dwLocalPort;
-	conn->RemotePort = item.dwRemotePort;
+	conn->LocalPort = ntohs((USHORT)item.dwLocalPort);
+	conn->RemotePort = ntohs((USHORT)item.dwRemotePort);
 	::memcpy(conn->ucLocalAddrress, item.ucLocalAddr, sizeof(conn->ucLocalAddrress));
 	::memcpy(conn->ucRemoteAddrress, item.ucRemoteAddr, sizeof(conn->ucRemoteAddrress));
 	conn->TimeStamp = item.liCreateTimestamp.QuadPart;
@@ -259,7 +260,7 @@ void ActiveConnectionTracker::AddUdp6Connections(PMIB_UDP6TABLE_OWNER_MODULE tab
 		else {
 			Connection key;
 			::memcpy(key.ucLocalAddrress, item.ucLocalAddr, sizeof(item.ucLocalAddr));
-			key.LocalPort = item.dwLocalPort;
+			key.LocalPort = ntohs((USHORT)item.dwLocalPort);
 			key.Pid = item.dwOwningPid;
 			key.Type = ConnectionType::UdpV6;
 
@@ -279,7 +280,7 @@ void ActiveConnectionTracker::AddUdp6Connections(PMIB_UDP6TABLE_OWNER_MODULE tab
 }
 
 void ActiveConnectionTracker::InitUdp6Connection(Connection* conn, const MIB_UDP6ROW_OWNER_MODULE& item) const {
-	conn->LocalPort = item.dwLocalPort;
+	conn->LocalPort = ntohs((USHORT)item.dwLocalPort);
 	::memcpy(conn->ucLocalAddrress, item.ucLocalAddr, sizeof(item.ucLocalAddr));
 	conn->Pid = item.dwOwningPid;
 	conn->Type = ConnectionType::UdpV6;

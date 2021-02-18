@@ -14,7 +14,7 @@
 #include <sdkddkver.h>
 
 #undef NTDDI_VERSION
-#define NTDDI_VERSION NTDDI_WIN7
+#define NTDDI_VERSION NTDDI_WIN10_RS4
 
 #include <atlbase.h>
 #include <atlapp.h>
@@ -37,6 +37,7 @@ extern CAppModule _Module;
 #include <vector>
 #include <memory>
 #include <unordered_map>
+#include <algorithm>
 
 #if defined _M_IX86
   #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")

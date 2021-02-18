@@ -24,8 +24,8 @@ struct Connection {
 		IN6_ADDR RemoteAddressV6;
 		UCHAR ucRemoteAddrress[16]{ 0 };
 	};
-	DWORD LocalPort;
-	DWORD RemotePort{ 0 };
+	USHORT LocalPort;
+	USHORT RemotePort{ 0 };
 	LONGLONG TimeStamp{ 0 };
 	std::wstring ModuleName;
 	std::wstring ModulePath;

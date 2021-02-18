@@ -63,3 +63,9 @@ std::vector<MIB_IPADDRROW> NetworkInformation::EnumIPAddressTable() {
     }
     return addresses;
 }
+
+MIB_TCPSTATS NetworkInformation::GetTcpStats(NetFamily family) {
+    MIB_TCPSTATS stats{};
+    ::GetTcpStatisticsEx(&stats, static_cast<ULONG>(family));
+    return stats;
+}

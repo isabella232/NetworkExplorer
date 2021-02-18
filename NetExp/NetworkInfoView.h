@@ -15,14 +15,13 @@ public:
 	CNetworkInfoView(IMainFrame* frame) : CViewBase(frame) {}
 
 	CString GetColumnText(HWND, int row, int col);
+	bool IsSortable(int col) const;
+	void DoSort(const SortInfo* si);
+	void DoRefresh();
 
 	PCWSTR GetHeader() const;
 
 	virtual void OnFinalMessage(HWND /*hWnd*/);
-
-	static PCWSTR NodeTypeToString(UINT type);
-	static PCWSTR InterfaceTypeToString(IFTYPE type);
-	static CString AddressTypeToString(WORD type);
 
 	BEGIN_MSG_MAP(CNetworkInfoView)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
@@ -47,7 +46,7 @@ private:
 
 		// adapter
 		AdapterIfIndex, AdapterName, AdapterDnsSuffix, AdapterDesc, AdapterFriendlyName,
-		AdapterPhyAddr, AdapterIfType,
+		AdapterPhyAddr, AdapterIfType, AdapterConnectionType,
 
 		// interface
 		IfAlias, IfDesc, IfGuid, IfLuid, IfIndex, IfType,
@@ -62,6 +61,7 @@ private:
 		GenericItem(GenericItemType type, PCWSTR name, const CString& value) : Type(type), Property(name), Value(value) {}
 	};
 
+	void SetAdaptersNode();
 	void SetAdapterNodeItems(const AdapterInfo& adapter);
 	void SetInterfaceNodeItems(const InterfaceInfo& iface);
 	void SetGeneralNodeItems();
@@ -71,6 +71,7 @@ private:
 	void AddAdapters(CTreeItem parent);
 	void AddInterfaces(CTreeItem parent);
 	void SetIPTableNodeItems();
+	void SetTcpStatsNodeItems();
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnTreeItemChanged(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/);
@@ -79,8 +80,10 @@ private:
 	CTreeViewCtrlEx m_Tree;
 	CListViewCtrl m_List;
 	CTreeItem m_SelectedNode, m_GeneralNode, m_AdaptersNode, m_InterfacesNode, m_IPTableNode;
+	CTreeItem m_TcpStatsNode, m_TcpStatsNode6, m_UdpStatsNode;
 	BYTE m_FixedInfoBuffer[1 << 10];
 	PFIXED_INFO m_FixedInfo;
+	MIB_TCPSTATS m_TcpStats;
 	std::vector<InterfaceInfo> m_Interfaces;
 	std::vector<AdapterInfo> m_Adapters;
 	std::vector<GenericItem> m_Items;
