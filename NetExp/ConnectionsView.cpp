@@ -7,6 +7,7 @@
 #include "ConnectionsView.h"
 #include "SortHelper.h"
 #include <Ip2string.h>
+#include "ClipboardHelper.h"
 
 #pragma comment(lib, "ntdll")
 
@@ -278,6 +279,17 @@ void CConnectionsView::OnFinalMessage(HWND /*hWnd*/) {
 	delete this;
 }
 
+CString CConnectionsView::GetListLine(int line) const {
+	auto columns = GetColumnManager(m_List)->GetCount();
+	CString text;
+	for(int i = 0; i < columns; i++) {
+		CString item;
+		m_List.GetItemText(line, i, item);
+		text += item + L",";
+	}
+	return text.Left(text.GetLength() - 1);
+}
+
 LRESULT CConnectionsView::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	m_hWndClient = m_List.Create(*this, rcDefault, nullptr, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN |
 		LVS_SINGLESEL | LVS_OWNERDATA | LVS_REPORT | LVS_SHOWSELALWAYS);
@@ -313,6 +325,40 @@ LRESULT CConnectionsView::OnToggleProtocol(WORD, WORD id, HWND, BOOL&) {
 	auto on = (flags & protocols[index]) != ConnectionType::Invalid;
 	m_Tracker.SetTrackingFlags(on ? (flags & ~protocols[index]) : (flags | protocols[index]));
 	GetFrame()->GetUpdateUI()->UISetCheck(id, on ? FALSE : TRUE);
+
+	return 0;
+}
+
+LRESULT CConnectionsView::OnEditCopy(WORD, WORD, HWND, BOOL&) {
+	int selected = m_List.GetSelectedIndex();
+	if(selected >= 0) {
+		ClipboardHelper::CopyText(*this, GetListLine(selected));
+	}
+	return 0;
+}
+
+LRESULT CConnectionsView::OnFileSave(WORD, WORD, HWND, BOOL&) {
+	auto paused = IsPaused();
+	if(!paused)
+		Pause(true);
+
+	CSimpleFileDialog dlg(FALSE, L"csv", nullptr, OFN_OVERWRITEPROMPT | OFN_ENABLESIZING,
+		L"CSV Files (*.csv)\0*.csv\0All Files\0*.*\0", *this);
+	if(dlg.DoModal() == IDOK) {
+		HANDLE hFile = ::CreateFile(dlg.m_szFileName, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr);
+		if(hFile == INVALID_HANDLE_VALUE) {
+			AtlMessageBox(*this, L"Failed to create file", IDS_TITLE, MB_ICONERROR);
+			return 0;
+		}
+		DWORD bytes;
+		for(int i = 0; i < m_List.GetItemCount(); i++) {
+			auto text = GetListLine(i) + L"\n";
+			::WriteFile(hFile, text.GetBuffer(), text.GetLength() * sizeof(WCHAR), &bytes, nullptr);
+		}
+		::CloseHandle(hFile);
+	}
+	if(!paused)
+		Pause(false);
 
 	return 0;
 }

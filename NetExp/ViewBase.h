@@ -3,12 +3,14 @@
 #include "IMainFrame.h"
 #include "resource.h"
 
-template<typename T, typename TBase = CFrameWindowImpl<T, CWindow, CControlWinTraits>>
+template<typename T, typename TBase = CWindow, typename TTraits = CControlWinTraits>
 class CViewBase abstract : 
-	public TBase,
+	public CFrameWindowImpl<T, TBase, TTraits>,
 	public CAutoUpdateUI<T>,
 	public CIdleHandler {
 public:
+	using BaseFrame = CFrameWindowImpl<T, TBase, TTraits>;
+
 	CViewBase(IMainFrame* frame) : m_pFrame(frame) {
 		ATLASSERT(frame);
 	}
@@ -28,7 +30,7 @@ protected:
 		MESSAGE_HANDLER(OM_ACTIVATE_PAGE, OnActivate)
 //		COMMAND_RANGE_HANDLER(ID_UPDATEINTERVAL_1SECOND, ID_UPDATEINTERVAL_10SECONDS, OnUpdateInterval)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
-		CHAIN_MSG_MAP(TBase)
+		CHAIN_MSG_MAP(BaseFrame)
 	ALT_MSG_MAP(1)
 		COMMAND_ID_HANDLER(ID_VIEW_PAUSE, OnPauseResume)
 		COMMAND_ID_HANDLER(ID_VIEW_REFRESHNOW, OnRefresh)

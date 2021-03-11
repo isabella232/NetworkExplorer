@@ -13,10 +13,10 @@
 const int WINDOW_MENU_POSITION = 5;
 
 BOOL CMainFrame::PreTranslateMessage(MSG* pMsg) {
-	if (CFrameWindowImpl<CMainFrame>::PreTranslateMessage(pMsg))
-		return TRUE;
+	//if(m_view.PreTranslateMessage(pMsg))
+	//	return TRUE;
 
-	return m_view.PreTranslateMessage(pMsg);
+	return CFrameWindowImpl<CMainFrame>::PreTranslateMessage(pMsg);
 }
 
 BOOL CMainFrame::OnIdle() {
@@ -239,7 +239,7 @@ LRESULT CMainFrame::OnTabActivated(int, LPNMHDR hdr, BOOL&) {
 	return 0;
 }
 
-LRESULT CMainFrame::OnForwardCommand(WORD, WORD, HWND, BOOL&) {
+LRESULT CMainFrame::OnForwardCommand(WORD, WORD, HWND, BOOL& handled) {
 	auto page = m_view.GetActivePage();
 	if (page >= 0) {
 		return ::SendMessage(m_view.GetPageHWND(page), WM_FORWARDMSG, 1, reinterpret_cast<LPARAM>(m_pCurrentMsg));

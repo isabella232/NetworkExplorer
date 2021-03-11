@@ -4,6 +4,7 @@
 //
 #define IDD_ABOUTBOX                    100
 #define IDR_MAINFRAME                   128
+#define IDS_TITLE                       129
 #define IDI_CONNECTION                  202
 #define IDI_PAUSE                       203
 #define IDI_PIN                         204
@@ -17,7 +18,6 @@
 #define IDI_USB                         212
 #define IDI_WIRELESS                    213
 #define IDI_TABLE                       214
-#define IDI_ICON1                       215
 #define IDI_ACTIVITY                    215
 #define ID_WINDOW_CLOSE                 32772
 #define ID_WINDOW_CLOSE_ALL             32773

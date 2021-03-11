@@ -53,6 +53,8 @@ public:
 		CHAIN_MSG_MAP(CViewBase<CConnectionsView>)
 	ALT_MSG_MAP(1)
 		COMMAND_RANGE_HANDLER(ID_PROTOCOLS_TCP, ID_PROTOCOLS_UDPV6, OnToggleProtocol)
+		COMMAND_ID_HANDLER(ID_EDIT_COPY, OnEditCopy)
+		COMMAND_ID_HANDLER(ID_FILE_SAVE, OnFileSave)
 		CHAIN_MSG_MAP_ALT(CViewBase<CConnectionsView>, 1)
 	END_MSG_MAP()
 
@@ -62,8 +64,12 @@ public:
 	//	LRESULT NotifyHandler(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
 
 private:
+	CString GetListLine(int line) const;
+
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnToggleProtocol(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnEditCopy(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnFileSave(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 	enum class ItemState { None, New, Deleted, DeletePending = 4};
 	struct ItemEx {
